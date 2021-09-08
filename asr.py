@@ -178,7 +178,6 @@ class CustomUpdater(StandardUpdater):
         self.grad_noise = grad_noise
         self.iteration = 0
         self.use_apex = use_apex
-        ### YZ
         self.mask_dir = 'results/snapshot.ep.100'
         self.mask_dict = torch.load(self.mask_dir, map_location=lambda storage, loc: storage)
         self.old_embedconv0 = None
@@ -392,6 +391,90 @@ class CustomUpdater(StandardUpdater):
         else:
             optimizer.step()
         optimizer.zero_grad()
+        
+        parameters_to_prune = (
+            (self.model.encoder.embed.conv[0], 'weight'),
+            (self.model.encoder.embed.conv[2], 'weight'),
+            (self.model.encoder.embed.out[0], 'weight'),
+            (self.model.encoder.encoders[0].self_attn.linear_q, 'weight'),
+            (self.model.encoder.encoders[0].self_attn.linear_k, 'weight'),
+            (self.model.encoder.encoders[0].self_attn.linear_v, 'weight'),
+            (self.model.encoder.encoders[0].self_attn.linear_out, 'weight'),
+            (self.model.encoder.encoders[0].feed_forward.w_1, 'weight'),
+            (self.model.encoder.encoders[0].feed_forward.w_2, 'weight'),
+            (self.model.encoder.encoders[1].self_attn.linear_q, 'weight'),
+            (self.model.encoder.encoders[1].self_attn.linear_k, 'weight'),
+            (self.model.encoder.encoders[1].self_attn.linear_v, 'weight'),
+            (self.model.encoder.encoders[1].self_attn.linear_out, 'weight'),
+            (self.model.encoder.encoders[1].feed_forward.w_1, 'weight'),
+            (self.model.encoder.encoders[1].feed_forward.w_2, 'weight'),
+            (self.model.encoder.encoders[2].self_attn.linear_q, 'weight'),
+            (self.model.encoder.encoders[2].self_attn.linear_k, 'weight'),
+            (self.model.encoder.encoders[2].self_attn.linear_v, 'weight'),
+            (self.model.encoder.encoders[2].self_attn.linear_out, 'weight'),
+            (self.model.encoder.encoders[2].feed_forward.w_1, 'weight'),
+            (self.model.encoder.encoders[2].feed_forward.w_2, 'weight'),
+            (self.model.encoder.encoders[3].self_attn.linear_q, 'weight'),
+            (self.model.encoder.encoders[3].self_attn.linear_k, 'weight'),
+            (self.model.encoder.encoders[3].self_attn.linear_v, 'weight'),
+            (self.model.encoder.encoders[3].self_attn.linear_out, 'weight'),
+            (self.model.encoder.encoders[3].feed_forward.w_1, 'weight'),
+            (self.model.encoder.encoders[3].feed_forward.w_2, 'weight'),
+            (self.model.encoder.encoders[4].self_attn.linear_q, 'weight'),
+            (self.model.encoder.encoders[4].self_attn.linear_k, 'weight'),
+            (self.model.encoder.encoders[4].self_attn.linear_v, 'weight'),
+            (self.model.encoder.encoders[4].self_attn.linear_out, 'weight'),
+            (self.model.encoder.encoders[4].feed_forward.w_1, 'weight'),
+            (self.model.encoder.encoders[4].feed_forward.w_2, 'weight'),
+            (self.model.encoder.encoders[5].self_attn.linear_q, 'weight'),
+            (self.model.encoder.encoders[5].self_attn.linear_k, 'weight'),
+            (self.model.encoder.encoders[5].self_attn.linear_v, 'weight'),
+            (self.model.encoder.encoders[5].self_attn.linear_out, 'weight'),
+            (self.model.encoder.encoders[5].feed_forward.w_1, 'weight'),
+            (self.model.encoder.encoders[5].feed_forward.w_2, 'weight'),
+            (self.model.encoder.encoders[6].self_attn.linear_q, 'weight'),
+            (self.model.encoder.encoders[6].self_attn.linear_k, 'weight'),
+            (self.model.encoder.encoders[6].self_attn.linear_v, 'weight'),
+            (self.model.encoder.encoders[6].self_attn.linear_out, 'weight'),
+            (self.model.encoder.encoders[6].feed_forward.w_1, 'weight'),
+            (self.model.encoder.encoders[6].feed_forward.w_2, 'weight'),
+            (self.model.encoder.encoders[7].self_attn.linear_q, 'weight'),
+            (self.model.encoder.encoders[7].self_attn.linear_k, 'weight'),
+            (self.model.encoder.encoders[7].self_attn.linear_v, 'weight'),
+            (self.model.encoder.encoders[7].self_attn.linear_out, 'weight'),
+            (self.model.encoder.encoders[7].feed_forward.w_1, 'weight'),
+            (self.model.encoder.encoders[7].feed_forward.w_2, 'weight'),
+            (self.model.encoder.encoders[8].self_attn.linear_q, 'weight'),
+            (self.model.encoder.encoders[8].self_attn.linear_k, 'weight'),
+            (self.model.encoder.encoders[8].self_attn.linear_v, 'weight'),
+            (self.model.encoder.encoders[8].self_attn.linear_out, 'weight'),
+            (self.model.encoder.encoders[8].feed_forward.w_1, 'weight'),
+            (self.model.encoder.encoders[8].feed_forward.w_2, 'weight'),
+            (self.model.encoder.encoders[9].self_attn.linear_q, 'weight'),
+            (self.model.encoder.encoders[9].self_attn.linear_k, 'weight'),
+            (self.model.encoder.encoders[9].self_attn.linear_v, 'weight'),
+            (self.model.encoder.encoders[9].self_attn.linear_out, 'weight'),
+            (self.model.encoder.encoders[9].feed_forward.w_1, 'weight'),
+            (self.model.encoder.encoders[9].feed_forward.w_2, 'weight'),
+            (self.model.encoder.encoders[10].self_attn.linear_q, 'weight'),
+            (self.model.encoder.encoders[10].self_attn.linear_k, 'weight'),
+            (self.model.encoder.encoders[10].self_attn.linear_v, 'weight'),
+            (self.model.encoder.encoders[10].self_attn.linear_out, 'weight'),
+            (self.model.encoder.encoders[10].feed_forward.w_1, 'weight'),
+            (self.model.encoder.encoders[10].feed_forward.w_2, 'weight'),
+            (self.model.encoder.encoders[11].self_attn.linear_q, 'weight'),
+            (self.model.encoder.encoders[11].self_attn.linear_k, 'weight'),
+            (self.model.encoder.encoders[11].self_attn.linear_v, 'weight'),
+            (self.model.encoder.encoders[11].self_attn.linear_out, 'weight'),
+            (self.model.encoder.encoders[11].feed_forward.w_1, 'weight'),
+            (self.model.encoder.encoders[11].feed_forward.w_2, 'weight'),
+        )
+        if self.iteration % 10000 == 0:
+            prune.global_unstructured(
+                parameters_to_prune,
+                pruning_method=prune.L1Unstructured,
+                amount=0.014621,
+            )            
 
     def update(self):
         self.update_core()
